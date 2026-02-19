@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Русский язык - Главная страница</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .main-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 3em;
+            color: #8B0000;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-subtitle {
+            font-size: 1.3em;
+            color: #8B0000;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+        
+        .option-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .option-btn {
+            background: linear-gradient(45deg, #8B0000, #DC143C);
+            color: white;
+            border: 3px solid #8B0000;
+            padding: 25px 40px;
+            border-radius: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 300px;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            background: linear-gradient(45deg, #DC143C, #8B0000);
+        }
+        
+        .option-description {
+            font-size: 1em;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .school-logo {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #8B0000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <a href="index.html" class="back-link">← Назад к выбору предмета</a>
+        <div class="school-logo">🏫</div>
+        <h1 class="main-title">Русский язык</h1>
+        <p class="main-subtitle">Выберите тип упражнения</p>
+        
+        <div class="option-buttons">
+            <a href="spelling.html" class="option-btn">
+                📝 Орфограммы
+            </a>
+            
+            <a href="orthoepic.html" class="option-btn">
+                🎯 Орфоэпический словарь
+            </a>
+            
+            <a href="exam.html" class="option-btn">
+                📚 Экзамен
+            </a>
+        </div>
+    </div>
+</body>
+</html>

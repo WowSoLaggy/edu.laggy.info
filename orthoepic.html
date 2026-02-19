@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ударения для детей - Практика ударений</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Ударения для детей</h1>
+            <p>Поможем выучить правильные ударения в русских словах!</p>
+            <a href="russian.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к выбору</a>
+        </header>
+
+
+        <div class="game-area">
+            <div class="top-controls" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
+                <div>
+                    <button id="mode-mc" class="show-answer-btn">Выбрать верный вариант</button>
+                    <button id="mode-place" class="show-answer-btn" style="background:linear-gradient(45deg,#8B0000,#DC143C);">Поставить ударение</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <span>Тренировка:</span>
+                    <label><input type="radio" name="train-size" id="train-all" checked> все слова</label>
+                    <label><input type="radio" name="train-size" id="train-15"> 15 случайных</label>
+                </div>
+            </div>
+            
+
+            <!-- Multiple Choice Mode -->
+            <div class="game-mode" id="multiple-choice-mode">
+                <div class="options-container" id="options-container">
+                    <!-- Options will be generated here -->
+                </div>
+            </div>
+
+            <!-- Place Stress Mode -->
+            <div class="game-mode" id="place-stress-mode" style="display:none;">
+                <div id="place-stress-container" style="text-align:center; margin-bottom:15px;"></div>
+                <div style="text-align:center; color:#666;">Нажми на гласную букву, чтобы поставить ударение.</div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+                <button id="prev-word" class="prev-btn">Предыдущее слово</button>
+                <button id="next-word" class="next-btn">Следующее слово</button>
+                <button id="show-answer" class="show-answer-btn">Показать ответ</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Правильно:</span>
+                <span class="stat-value" id="correct-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Неправильно:</span>
+                <span class="stat-value" id="incorrect-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Всего слов:</span>
+                <span class="stat-value" id="total-count">0</span>
+            </div>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">0/0</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

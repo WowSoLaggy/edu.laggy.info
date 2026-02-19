@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Турбо-режим - Математика</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .math-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .math-expr {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #8B0000;
+            min-width: 180px;
+        }
+        .math-input {
+            font-size: 1.3em;
+            padding: 10px 15px;
+            width: 100px;
+            border: 3px solid #8B0000;
+            border-radius: 10px;
+        }
+        .math-input:disabled { background: #eee; cursor: not-allowed; }
+        .math-input.input-correct { border-color: #228B22; background: #f0fff0; }
+        .math-input.input-incorrect { border-color: #DC143C; background: #fff0f0; }
+        .math-feedback { font-size: 1.2em; min-width: 80px; }
+        .math-feedback.correct { color: #228B22; font-weight: bold; }
+        .math-feedback.incorrect { color: #DC143C; font-weight: bold; }
+        .math-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .math-btn {
+            background: linear-gradient(45deg, #8B0000, #DC143C);
+            color: white;
+            border: 3px solid #8B0000;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .math-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+        }
+        .game-area {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .game-area-content { flex: 1; min-width: 0; }
+        .timer-box {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8B0000;
+            padding: 15px 20px;
+            background: #fff5f5;
+            border-radius: 15px;
+            position: sticky;
+            top: 0;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .timer-box.time-up {
+            color: #DC143C;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ Турбо-режим</h1>
+            <p>10 примеров за 5 минут. Сложность: одно, два или три действия.</p>
+            <a href="math.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к выбору</a>
+        </header>
+
+        <div class="game-area">
+            <div class="game-area-content">
+                <div id="examples-container"></div>
+                <div class="math-controls">
+                <button id="check-btn" class="math-btn">Проверить</button>
+                <button id="again-btn" class="math-btn">Ещё раз</button>
+                </div>
+            </div>
+            <div class="timer-box" id="timer-display">5:00</div>
+        </div>
+    </div>
+
+    <script src="math-turbo.js"></script>
+</body>
+</html>

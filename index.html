@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выберите предмет - Главная страница</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .main-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .main-title {
+            font-size: 3em;
+            color: #8B0000;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-subtitle {
+            font-size: 1.3em;
+            color: #8B0000;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+        
+        .option-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .option-btn {
+            background: linear-gradient(45deg, #8B0000, #DC143C);
+            color: white;
+            border: 3px solid #8B0000;
+            padding: 25px 40px;
+            border-radius: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 300px;
+        }
+        
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            background: linear-gradient(45deg, #DC143C, #8B0000);
+        }
+        
+        .option-description {
+            font-size: 1em;
+            color: #666;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        .school-logo {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="school-logo">🏫</div>
+        <h1 class="main-title">Выберите предмет</h1>
+        <p class="main-subtitle">Математика или Русский язык</p>
+        
+        <div class="option-buttons">
+            <a href="math.html" class="option-btn">
+                🔢 Математика
+            </a>
+            
+            <a href="russian.html" class="option-btn">
+                📖 Русский язык
+            </a>
+        </div>
+    </div>
+</body>
+</html>
