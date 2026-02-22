@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Математика - Главная страница</title>
+    <title>Сложение и вычитание - Математика</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         .main-container { max-width: 600px; margin: 50px auto; padding: 40px; text-align: center; }
@@ -24,17 +24,20 @@
             box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
             background: linear-gradient(45deg, #DC143C, #8B0000);
         }
+        .math-icon { color: #000; font-style: normal; filter: grayscale(1) contrast(1.2); }
     </style>
 </head>
 <body>
     <div class="main-container">
-        <a href="index.html" class="back-link">← Назад к выбору предмета</a>
+        <a href="math.html" class="back-link">← Назад к выбору</a>
         <div class="school-logo">🏫</div>
-        <h1 class="main-title">Математика</h1>
-        <p class="main-subtitle">Выберите раздел</p>
+        <h1 class="main-title">Сложение и вычитание</h1>
+        <p class="main-subtitle">Выберите тип примеров</p>
         <div class="option-buttons">
-            <a href="math-add.html" class="option-btn">➕➖ Сложение и вычитание</a>
-            <a href="math-mult.html" class="option-btn">✖️➗ Умножение и деление</a>
+            <a href="math1.html" class="option-btn"><span class="math-icon">➕</span> Примеры в одно действие</a>
+            <a href="math2.html" class="option-btn"><span class="math-icon">➕➖</span> Примеры в два действия</a>
+            <a href="math3.html" class="option-btn"><span class="math-icon">➕➖➕</span> Примеры в три действия</a>
+            <a href="math-turbo.html" class="option-btn">⚡ Турбо-режим</a>
         </div>
     </div>
 </body>
