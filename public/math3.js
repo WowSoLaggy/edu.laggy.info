@@ -113,6 +113,27 @@ let batchIndex = 0;
 let wrongExamples = [];
 let batchStates = {};
 
+function ensureRetryHint() {
+    let hint = document.getElementById('retry-hint');
+    if (!hint) {
+        hint = document.createElement('div');
+        hint.id = 'retry-hint';
+        hint.textContent = 'Попробуйте еще раз';
+        hint.style.cssText = 'display:none;padding:12px 16px;margin-bottom:16px;text-align:center;background:#fff8e6;color:#8B0000;font-weight:bold;border-radius:12px;border:2px solid #8B0000;';
+        const ga = document.querySelector('.game-area');
+        if (ga) ga.insertBefore(hint, ga.firstElementChild);
+    }
+    return hint;
+}
+
+function updateRetryHint() {
+    const hint = document.getElementById('retry-hint');
+    if (!hint) return;
+    const has = Array.from(document.querySelectorAll('.math-input')).some(inp =>
+        inp.dataset.attempts === '1' && !inp.classList.contains('input-correct'));
+    hint.style.display = has ? 'block' : 'none';
+}
+
 function saveBatchState() {
     const rows = document.querySelectorAll('.math-row');
     if (rows.length === 0) return;
@@ -124,7 +145,8 @@ function saveBatchState() {
             value: input.value,
             feedback: fb ? fb.textContent : '',
             isCorrect: input.classList.contains('input-correct'),
-            isIncorrect: input.classList.contains('input-incorrect')
+            isIncorrect: input.classList.contains('input-incorrect'),
+            attempts: parseInt(input.dataset.attempts || '0', 10)
         });
     });
     batchStates[batchIndex] = state;
@@ -149,9 +171,10 @@ function renderBatch() {
         const row = document.createElement('div');
         row.className = 'math-row';
         const s = savedState && savedState[i] ? savedState[i] : null;
+        const attempts = s ? (s.attempts || 0) : 0;
         row.innerHTML = `
             <span class="math-expr">${ex.expr}</span>
-            <input type="number" class="math-input" data-answer="${ex.answer}" data-idx="${idx}" placeholder="?">
+            <input type="number" class="math-input" data-answer="${ex.answer}" data-idx="${idx}" data-attempts="${attempts}" placeholder="?">
             <span class="math-feedback" data-idx="${idx}"></span>
         `;
         container.appendChild(row);
@@ -160,6 +183,7 @@ function renderBatch() {
         if (s) {
             input.value = s.value || '';
             fb.textContent = s.feedback || '';
+            input.dataset.attempts = String(s.attempts || 0);
             if (s.isCorrect) { input.classList.add('input-correct'); fb.className = 'math-feedback correct'; }
             if (s.isIncorrect) { input.classList.add('input-incorrect'); fb.className = 'math-feedback incorrect'; }
         }
@@ -182,6 +206,8 @@ function renderBatch() {
         moreBtn.onclick = showNextBatch;
     }
 
+    ensureRetryHint();
+    updateRetryHint();
     updateButtonVisibility();
 }
 
@@ -213,17 +239,27 @@ function checkAnswers() {
             return;
         }
 
+        const attempts = parseInt(input.dataset.attempts || '0', 10);
         if (userAnswer === correct) {
             fb.textContent = '✓';
             fb.className = 'math-feedback correct';
             input.classList.add('input-correct');
             input.classList.remove('input-incorrect');
         } else {
-            fb.textContent = `✗ (${correct})`;
-            fb.className = 'math-feedback incorrect';
-            input.classList.add('input-incorrect');
-            input.classList.remove('input-correct');
-            wrongExamples.push({ expr, answer: correct });
+            if (attempts === 0) {
+                fb.textContent = '✗';
+                fb.className = 'math-feedback incorrect';
+                input.classList.add('input-incorrect');
+                input.classList.remove('input-correct');
+                input.dataset.attempts = '1';
+            } else {
+                fb.textContent = `✗ (${correct})`;
+                fb.className = 'math-feedback incorrect';
+                input.classList.add('input-incorrect');
+                input.classList.remove('input-correct');
+                input.dataset.attempts = '2';
+                wrongExamples.push({ expr, answer: correct });
+            }
         }
     });
 
@@ -233,6 +269,8 @@ function checkAnswers() {
     if (totalAnswered === BATCH_SIZE && correctCount === BATCH_SIZE) {
         showFanfare();
     }
+    ensureRetryHint();
+    updateRetryHint();
     updateButtonVisibility();
 }
 

@@ -151,6 +151,7 @@ let timerInterval = null;
 let remainingSec = TURBO_TIME_SEC;
 let timeUp = false;
 let allCorrectAchieved = false;
+let turboTimerHalted = false;
 
 function formatTime(sec) {
     const m = Math.floor(sec / 60);
@@ -179,9 +180,25 @@ function onTimeUp() {
     }
 }
 
+function haltTurboTimer() {
+    if (turboTimerHalted || allCorrectAchieved) return;
+    turboTimerHalted = true;
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+    const timerEl = document.getElementById('timer-display');
+    if (timerEl) {
+        timerEl.textContent = `${formatTime(remainingSec)} — стоп`;
+        timerEl.classList.remove('time-success');
+        timerEl.classList.add('time-up');
+    }
+}
+
 function startTimer() {
     remainingSec = TURBO_TIME_SEC;
     timeUp = false;
+    turboTimerHalted = false;
     const timerEl = document.getElementById('timer-display');
     if (timerEl) {
         timerEl.classList.remove('time-up', 'time-success');
@@ -197,6 +214,27 @@ function startTimer() {
     }, 1000);
 }
 
+function ensureRetryHint() {
+    let hint = document.getElementById('retry-hint');
+    if (!hint) {
+        hint = document.createElement('div');
+        hint.id = 'retry-hint';
+        hint.textContent = 'Попробуйте еще раз';
+        hint.style.cssText = 'display:none;padding:12px 16px;margin-bottom:16px;text-align:center;background:#fff8e6;color:#8B0000;font-weight:bold;border-radius:12px;border:2px solid #8B0000;';
+        const ga = document.querySelector('.game-area');
+        if (ga) ga.insertBefore(hint, ga.firstElementChild);
+    }
+    return hint;
+}
+
+function updateRetryHint() {
+    const hint = document.getElementById('retry-hint');
+    if (!hint) return;
+    const has = Array.from(document.querySelectorAll('.math-input')).some(inp =>
+        inp.dataset.attempts === '1' && !inp.classList.contains('input-correct'));
+    hint.style.display = has ? 'block' : 'none';
+}
+
 function renderExamples() {
     allCorrectAchieved = false;
     examples = generateTurboExamples();
@@ -208,18 +246,21 @@ function renderExamples() {
         row.className = 'math-row';
         row.innerHTML = `
             <span class="math-expr">${ex.expr}</span>
-            <input type="number" class="math-input" data-answer="${ex.answer}" data-idx="${i + 1}" placeholder="?">
+            <input type="number" class="math-input" data-answer="${ex.answer}" data-idx="${i + 1}" data-attempts="0" placeholder="?">
             <span class="math-feedback" data-idx="${i + 1}"></span>
         `;
         container.appendChild(row);
     });
 
+    ensureRetryHint();
+    updateRetryHint();
     startTimer();
 }
 
 function checkAnswers() {
     if (timeUp) return;
     document.querySelectorAll('.math-input').forEach(input => {
+        if (input.disabled) return;
         const row = input.closest('.math-row');
         const fb = row.querySelector('.math-feedback');
         const userAnswer = parseInt(input.value, 10);
@@ -231,18 +272,34 @@ function checkAnswers() {
             return;
         }
 
+        const attempts = parseInt(input.dataset.attempts || '0', 10);
+
         if (userAnswer === correct) {
             fb.textContent = '✓';
             fb.className = 'math-feedback correct';
             input.classList.add('input-correct');
             input.classList.remove('input-incorrect');
         } else {
-            fb.textContent = `✗ (${correct})`;
-            fb.className = 'math-feedback incorrect';
-            input.classList.add('input-incorrect');
-            input.classList.remove('input-correct');
+            if (attempts === 0) {
+                fb.textContent = '✗';
+                fb.className = 'math-feedback incorrect';
+                input.classList.add('input-incorrect');
+                input.classList.remove('input-correct');
+                input.dataset.attempts = '1';
+            } else {
+                fb.textContent = `✗ (${correct})`;
+                fb.className = 'math-feedback incorrect';
+                input.classList.add('input-incorrect');
+                input.classList.remove('input-correct');
+                input.dataset.attempts = '2';
+                input.disabled = true;
+                haltTurboTimer();
+            }
         }
     });
+
+    ensureRetryHint();
+    updateRetryHint();
 
     const inputs = document.querySelectorAll('.math-input');
     const correctCount = Array.from(inputs).filter(inp => inp.classList.contains('input-correct')).length;
