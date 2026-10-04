@@ -159,43 +159,87 @@ header p {
     flex-wrap: wrap;
 }
 
-.prev-btn, .next-btn, .show-answer-btn {
+/* Mode switchers (правильное написание / буквы / на слух) — current red style */
+.mode-btn,
+.show-answer-btn.mode-btn {
     background: linear-gradient(45deg, #8B0000, #DC143C);
     color: white;
     border: 2px solid #8B0000;
-    padding: 15px 25px;
+    padding: 12px 18px;
     border-radius: 15px;
-    font-size: 1.2em;
+    font-size: 1.05em;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-/* Active mode highlight */
-.active-mode {
-    outline: 3px solid #8B0000;
-    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.15), 0 6px 20px rgba(139, 0, 0, 0.25);
-}
-
-/* Make inactive mode buttons lighter */
-.top-controls button {
-    transition: opacity 0.2s ease, box-shadow 0.2s ease;
-}
-.top-controls button:not(.active-mode) {
-    opacity: 0.6;
-}
-
-.prev-btn:hover, .next-btn:hover, .show-answer-btn:hover {
+.mode-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(139, 0, 0, 0.4);
+    box-shadow: 0 6px 20px rgba(139, 0, 0, 0.35);
     background: linear-gradient(45deg, #DC143C, #8B0000);
 }
 
-.prev-btn:disabled {
-    background: #ccc;
+/* Active mode highlight */
+.mode-btn.active-mode,
+.active-mode.mode-btn {
+    outline: 3px solid #8B0000;
+    box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.15), 0 6px 20px rgba(139, 0, 0, 0.25);
+    opacity: 1;
+}
+
+/* Make inactive mode buttons lighter */
+.top-controls .mode-btn {
+    transition: opacity 0.2s ease, box-shadow 0.2s ease;
+}
+.top-controls .mode-btn:not(.active-mode) {
+    opacity: 0.55;
+}
+
+/* Action buttons (послушать, проверить, prev/next, показать ответ) — different look + larger */
+.action-btn,
+.prev-btn,
+.next-btn,
+.show-answer-btn:not(.mode-btn) {
+    background: #fffaf5;
+    color: #8B0000;
+    border: 3px solid #8B0000;
+    padding: 16px 28px;
+    border-radius: 999px;
+    font-size: 1.25em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 0 #8B0000;
+}
+
+.action-btn:hover,
+.prev-btn:hover,
+.next-btn:hover,
+.show-answer-btn:not(.mode-btn):hover {
+    background: #8B0000;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 0, 0, 0.28);
+}
+
+.action-btn:active,
+.prev-btn:active,
+.next-btn:active,
+.show-answer-btn:not(.mode-btn):active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 #8B0000;
+}
+
+.prev-btn:disabled,
+.next-btn:disabled,
+.action-btn:disabled,
+.show-answer-btn:not(.mode-btn):disabled {
+    background: #eee;
+    color: #999;
+    border-color: #ccc;
+    box-shadow: none;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
 }
 
 .stats {

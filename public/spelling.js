@@ -1,5 +1,6 @@
 // Spelling word list from the orthographic dictionary
-const spellingWordList = [
+// Override with window.SPELLING_WORD_LIST before loading this script (e.g. 3 класс)
+const defaultSpellingWordList = [
     { word: "язык", correct: "язык", wrong: ["езык"] },
     { word: "хорошо", correct: "хорошо", wrong: ["харашо", "харошо"] },
     { word: "машина", correct: "машина", wrong: ["машына"] },
@@ -97,6 +98,10 @@ const spellingWordList = [
     { word: "сентябрь", correct: "сентябрь", wrong: ["синтябрь"] }
 ];
 
+const spellingWordList = (typeof window !== 'undefined' && Array.isArray(window.SPELLING_WORD_LIST) && window.SPELLING_WORD_LIST.length)
+    ? window.SPELLING_WORD_LIST
+    : defaultSpellingWordList;
+
 class SpellingGame {
     constructor() {
         this.currentWordIndex = 0;
@@ -106,11 +111,25 @@ class SpellingGame {
         this.isAnswered = false;
         this.incorrectAnswers = [];
         this.activeWordList = [];
-        this.gameMode = 'choice'; // 'choice' | 'missing'
+        this.gameMode = 'choice'; // 'choice' | 'missing' | 'dictate'
         this.trainSize = 'all'; // 'all' | '15'
+        this.russianVoice = null;
         
+        this.prepareSpeechVoices();
         this.initializeGame();
         this.bindEvents();
+    }
+
+    prepareSpeechVoices() {
+        if (!window.speechSynthesis) return;
+        const pickVoice = () => {
+            const voices = window.speechSynthesis.getVoices();
+            this.russianVoice = voices.find(v => v.lang && v.lang.toLowerCase().startsWith('ru')) || null;
+        };
+        pickVoice();
+        if (typeof window.speechSynthesis.onvoiceschanged !== 'undefined') {
+            window.speechSynthesis.onvoiceschanged = pickVoice;
+        }
     }
 
     initializeGame() {
@@ -166,13 +185,15 @@ class SpellingGame {
         // Mode buttons
         const choiceBtn = document.getElementById('mode-choice');
         const missingBtn = document.getElementById('mode-missing');
-        if (choiceBtn && missingBtn) {
-            choiceBtn.addEventListener('click', () => {
-                this.setGameMode('choice');
-            });
-            missingBtn.addEventListener('click', () => {
-                this.setGameMode('missing');
-            });
+        const dictateBtn = document.getElementById('mode-dictate');
+        if (choiceBtn) {
+            choiceBtn.addEventListener('click', () => this.setGameMode('choice'));
+        }
+        if (missingBtn) {
+            missingBtn.addEventListener('click', () => this.setGameMode('missing'));
+        }
+        if (dictateBtn) {
+            dictateBtn.addEventListener('click', () => this.setGameMode('dictate'));
         }
 
         // Train size radios
@@ -189,18 +210,19 @@ class SpellingGame {
     }
 
     setGameMode(mode) {
-        if (mode !== 'choice' && mode !== 'missing') return;
+        if (mode !== 'choice' && mode !== 'missing' && mode !== 'dictate') return;
         this.gameMode = mode;
         
         // Toggle active mode button
         const choiceBtn = document.getElementById('mode-choice');
         const missingBtn = document.getElementById('mode-missing');
-        if (choiceBtn && missingBtn) {
-            choiceBtn.classList.toggle('active-mode', mode === 'choice');
-            missingBtn.classList.toggle('active-mode', mode === 'missing');
-        }
+        const dictateBtn = document.getElementById('mode-dictate');
+        if (choiceBtn) choiceBtn.classList.toggle('active-mode', mode === 'choice');
+        if (missingBtn) missingBtn.classList.toggle('active-mode', mode === 'missing');
+        if (dictateBtn) dictateBtn.classList.toggle('active-mode', mode === 'dictate');
         
-        this.loadWord();
+        // After "игра завершена" index is past the end — restart so mode can switch
+        this.resetGameWithNewList();
     }
 
     setTrainSize(size) {
@@ -209,11 +231,22 @@ class SpellingGame {
         this.resetGameWithNewList();
     }
 
+    showNavButtons() {
+        const prev = document.getElementById('prev-word');
+        const next = document.getElementById('next-word');
+        const show = document.getElementById('show-answer');
+        if (prev) prev.style.display = 'inline-block';
+        if (next) next.style.display = 'inline-block';
+        if (show) show.style.display = 'inline-block';
+    }
+
     resetGameWithNewList() {
+        this.stopSpeech();
         this.currentWordIndex = 0;
         this.correctCount = 0;
         this.incorrectCount = 0;
         this.incorrectAnswers = [];
+        this.showNavButtons();
         this.buildActiveList();
         this.shuffleWords();
         this.loadWord();
@@ -224,10 +257,12 @@ class SpellingGame {
     updateModeUI() {
         const choiceMode = document.getElementById('multiple-choice-mode');
         const missingMode = document.getElementById('missing-letter-mode');
+        const dictateMode = document.getElementById('dictate-mode');
         const wordDisplay = document.getElementById('word-display');
         if (!choiceMode || !missingMode) return;
         choiceMode.style.display = this.gameMode === 'choice' ? 'block' : 'none';
         missingMode.style.display = this.gameMode === 'missing' ? 'block' : 'none';
+        if (dictateMode) dictateMode.style.display = this.gameMode === 'dictate' ? 'block' : 'none';
         if (wordDisplay) {
             wordDisplay.style.display = 'block'; // Always show word display
         }
@@ -254,12 +289,179 @@ class SpellingGame {
         this.updateModeUI();
         if (this.gameMode === 'choice') {
             this.loadMultipleChoice();
-        } else {
+        } else if (this.gameMode === 'missing') {
             this.loadMissingLetter();
+        } else {
+            this.loadDictateMode();
         }
 
         this.updateProgress();
         this.updateButtonStates();
+    }
+
+    normalizeSpelling(text) {
+        return (text || '')
+            .trim()
+            .toLowerCase()
+            .replace(/\s+/g, ' ');
+    }
+
+    slugifyWord(word) {
+        const map = {
+            а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'yo', ж: 'zh', з: 'z', и: 'i', й: 'y',
+            к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f',
+            х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+            ' ': '-', '-': '-'
+        };
+        const slug = String(word || '')
+            .toLowerCase()
+            .split('')
+            .map(ch => (Object.prototype.hasOwnProperty.call(map, ch) ? map[ch] : (/[a-z0-9]/.test(ch) ? ch : '')))
+            .join('')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+        return slug || 'word';
+    }
+
+    audioPathForWord(word) {
+        if (this.currentWord && this.currentWord.audio) return this.currentWord.audio;
+        return `audio/${this.slugifyWord(word)}.mp3`;
+    }
+
+    speakCurrentWord() {
+        if (!this.currentWord) return;
+
+        // Natural pre-recorded dictation for all words (Chrome TTS is often unnatural)
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+        }
+        const path = this.audioPathForWord(this.currentWord.correct);
+        const audio = new Audio(path);
+        this.currentAudio = audio;
+        audio.play().catch(() => {
+            this.speakWithSynthesis(this.currentWord.speak || this.currentWord.correct);
+        });
+    }
+
+    speakWithSynthesis(text) {
+        if (!text) return;
+        if (!window.speechSynthesis) {
+            const feedback = document.getElementById('feedback');
+            if (feedback) {
+                feedback.textContent = 'Озвучка не поддерживается в этом браузере. Попросите взрослого продиктовать слово.';
+                feedback.className = 'feedback';
+            }
+            return;
+        }
+        window.speechSynthesis.cancel();
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+        }
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'ru-RU';
+        utterance.rate = 0.85;
+        if (this.russianVoice) utterance.voice = this.russianVoice;
+        window.speechSynthesis.speak(utterance);
+    }
+
+    loadDictateMode() {
+        const container = document.getElementById('dictate-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const hint = document.createElement('div');
+        hint.style.color = '#666';
+        hint.style.marginBottom = '16px';
+        hint.textContent = 'Послушай слово и напиши его правильно.';
+        container.appendChild(hint);
+
+        const listenBtn = document.createElement('button');
+        listenBtn.type = 'button';
+        listenBtn.className = 'action-btn';
+        listenBtn.textContent = '🔊 Послушать';
+        listenBtn.style.marginBottom = '20px';
+        listenBtn.addEventListener('click', () => this.speakCurrentWord());
+        container.appendChild(listenBtn);
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = 'dictate-input';
+        input.autocomplete = 'off';
+        input.autocapitalize = 'off';
+        input.spellcheck = false;
+        input.placeholder = 'Напиши слово здесь';
+        input.style.fontSize = '1.8em';
+        input.style.fontWeight = 'bold';
+        input.style.color = '#8B0000';
+        input.style.textAlign = 'center';
+        input.style.padding = '12px 16px';
+        input.style.border = '3px solid #8B0000';
+        input.style.borderRadius = '12px';
+        input.style.width = 'min(420px, 90%)';
+        input.style.display = 'block';
+        input.style.margin = '0 auto 16px';
+        input.style.backgroundColor = 'white';
+        container.appendChild(input);
+        this.dictateInput = input;
+
+        const checkBtn = document.createElement('button');
+        checkBtn.type = 'button';
+        checkBtn.className = 'action-btn';
+        checkBtn.textContent = 'Проверить';
+        checkBtn.addEventListener('click', () => this.checkDictateAnswer());
+        container.appendChild(checkBtn);
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.checkDictateAnswer();
+            }
+        });
+        input.addEventListener('input', () => {
+            if (this.isAnswered) return;
+            input.style.backgroundColor = 'white';
+            input.style.borderColor = '#8B0000';
+        });
+
+        // Auto-play once when the word appears
+        setTimeout(() => this.speakCurrentWord(), 250);
+        input.focus();
+    }
+
+    checkDictateAnswer() {
+        if (this.isAnswered || !this.dictateInput) return;
+        const entered = this.normalizeSpelling(this.dictateInput.value);
+        if (!entered) return;
+
+        const expected = this.normalizeSpelling(this.currentWord.correct);
+        const isCorrect = entered === expected;
+
+        if (!isCorrect) {
+            this.dictateInput.style.backgroundColor = '#f8d7da';
+            this.dictateInput.style.borderColor = '#dc3545';
+            this.dictateInput.disabled = false;
+            if (!this.incorrectAnswers.some(a => a.word === this.currentWord.correct)) {
+                this.incorrectAnswers.push({
+                    word: this.currentWord.correct,
+                    selected: this.dictateInput.value.trim(),
+                    correct: this.currentWord.correct
+                });
+                this.updateStats(false);
+            }
+            this.showFeedback(false);
+            this.dictateInput.focus();
+            return;
+        }
+
+        this.isAnswered = true;
+        this.dictateInput.disabled = true;
+        this.dictateInput.style.backgroundColor = '#d4edda';
+        this.dictateInput.style.borderColor = '#28a745';
+        this.showFeedback(true);
+        this.updateStats(true);
     }
 
     loadMultipleChoice() {
@@ -291,49 +493,58 @@ class SpellingGame {
         });
     }
 
+    getMissingPositions(correct) {
+        if (Array.isArray(this.currentWord.gaps) && this.currentWord.gaps.length) {
+            return [...this.currentWord.gaps].sort((a, b) => a - b);
+        }
+
+        const wrong = (this.currentWord.wrong || []).find(w => w !== correct) || (this.currentWord.wrong || [])[0] || '';
+        let missingPosition = -1;
+
+        if (correct === 'вдруг') {
+            missingPosition = 4;
+        } else if (correct === 'до свидания') {
+            missingPosition = 9;
+        } else if (correct === 'щавель') {
+            missingPosition = 1;
+        } else {
+            for (let i = 0; i < Math.min(correct.length, wrong.length); i++) {
+                if (correct[i] !== wrong[i]) {
+                    missingPosition = i;
+                    break;
+                }
+            }
+            if (missingPosition === -1) missingPosition = correct.length - 1;
+        }
+        return [missingPosition];
+    }
+
+    createLetterInput() {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.maxLength = 1;
+        input.className = 'missing-letter-input';
+        input.style.fontSize = '1em';
+        input.style.width = '30px';
+        input.style.height = '30px';
+        input.style.textAlign = 'center';
+        input.style.border = '2px solid #8B0000';
+        input.style.borderRadius = '8px';
+        input.style.fontWeight = 'bold';
+        input.style.color = '#8B0000';
+        input.style.margin = '0 3px';
+        input.style.backgroundColor = 'white';
+        return input;
+    }
+
     loadMissingLetter() {
         const container = document.getElementById('missing-letter-container');
         container.innerHTML = '';
 
-        // Find the position where the word differs from wrong options
         const correct = this.currentWord.correct;
-        // Choose a wrong option that actually differs from correct
-        const wrong = this.currentWord.wrong.find(w => w !== correct) || this.currentWord.wrong[0];
-        
-        let missingPosition = -1;
-        let missingLetter = '';
-        
-        // Special cases for specific words
-        if (correct === 'вдруг') {
-            // positions are 1-based in the UI description; index 4 is the 5th letter 'г'
-            missingPosition = 4;
-            missingLetter = 'г';
-        } else if (correct === 'до свидания') {
-            // allow either 6th or 10th position (both 'и'); choose 10th as default gap
-            missingPosition = 9;
-            missingLetter = 'и';
-        } else if (correct === 'щавель') {
-            // 2nd letter 'а' per requirement
-            missingPosition = 1;
-            missingLetter = 'а';
-        } else {
-            // Find the first difference
-            for (let i = 0; i < Math.min(correct.length, wrong.length); i++) {
-                if (correct[i] !== wrong[i]) {
-                    missingPosition = i;
-                    missingLetter = correct[i];
-                    break;
-                }
-            }
+        const positions = this.getMissingPositions(correct);
+        const posSet = new Set(positions);
 
-            if (missingPosition === -1) {
-                // Fallback: use the last character
-                missingPosition = correct.length - 1;
-                missingLetter = correct[missingPosition];
-            }
-        }
-
-        // Create word with missing letter - inline input
         const wrapper = document.createElement('div');
         wrapper.style.fontSize = '2.5em';
         wrapper.style.fontWeight = 'bold';
@@ -345,111 +556,144 @@ class SpellingGame {
         wrapper.style.alignItems = 'center';
         wrapper.style.flexWrap = 'wrap';
 
-        // Split word into parts and create inline input
-        const beforeGap = correct.substring(0, missingPosition);
-        const afterGap = correct.substring(missingPosition + 1);
-        
-        if (beforeGap) {
-            const beforeSpan = document.createElement('span');
-            beforeSpan.textContent = beforeGap;
-            wrapper.appendChild(beforeSpan);
-        }
+        this.missingInputs = [];
+        this.missingPositions = positions;
+        this.expectedLetters = positions.map(i => correct[i].toLowerCase());
+        // keep legacy single-input refs for older helpers
+        this.missingInput = null;
+        this.expectedLetter = this.expectedLetters[0] || '';
+        this.missingPositionIndex = positions[0];
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.maxLength = 1;
-        input.style.fontSize = '1em';
-        input.style.width = '30px';
-        input.style.height = '30px';
-        input.style.textAlign = 'center';
-        input.style.border = '2px solid #8B0000';
-        input.style.borderRadius = '8px';
-        input.style.fontWeight = 'bold';
-        input.style.color = '#8B0000';
-        input.style.margin = '0 3px';
-        input.style.backgroundColor = 'white';
-        
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && input.value.trim()) {
-                this.checkMissingLetter(input.value.trim().toLowerCase(), missingLetter.toLowerCase());
+        for (let i = 0; i < correct.length; i++) {
+            if (posSet.has(i)) {
+                const input = this.createLetterInput();
+                input.dataset.gapIndex = String(this.missingInputs.length);
+                input.addEventListener('input', (e) => {
+                    if (this.isAnswered) return;
+                    const val = e.target.value;
+                    if (val.length > 1) e.target.value = val.slice(-1);
+                    // Reset red/green while child edits after a mistake
+                    e.target.style.backgroundColor = 'white';
+                    e.target.style.borderColor = '#8B0000';
+                    if (e.target.value.length === 1) {
+                        const next = this.missingInputs.find((inp, idx) => {
+                            return idx > this.missingInputs.indexOf(e.target) && !inp.value;
+                        }) || this.missingInputs.find(inp => !inp.value);
+                        if (next && next !== e.target) next.focus();
+                        this.tryCheckMissingLetters();
+                    }
+                });
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') this.tryCheckMissingLetters(true);
+                });
+                wrapper.appendChild(input);
+                this.missingInputs.push(input);
+                if (!this.missingInput) this.missingInput = input;
+            } else {
+                const span = document.createElement('span');
+                span.textContent = correct[i] === ' ' ? '\u00A0' : correct[i];
+                if (correct[i] === ' ') span.style.width = '0.4em';
+                wrapper.appendChild(span);
             }
-        });
-
-        input.addEventListener('input', (e) => {
-            if (e.target.value.length === 1) {
-                this.checkMissingLetter(e.target.value.toLowerCase(), missingLetter.toLowerCase());
-            }
-        });
-
-        wrapper.appendChild(input);
-
-        if (afterGap) {
-            const afterSpan = document.createElement('span');
-            afterSpan.textContent = afterGap;
-            wrapper.appendChild(afterSpan);
         }
 
         container.appendChild(wrapper);
-
-        // Store references for later use
-        this.missingInput = input;
-        this.expectedLetter = missingLetter.toLowerCase();
-        this.missingPositionIndex = missingPosition; // store for reconstruction
+        if (this.missingInputs[0]) this.missingInputs[0].focus();
     }
 
-    checkMissingLetter(entered, expected) {
+    tryCheckMissingLetters(force = false) {
         if (this.isAnswered) return;
-        
-        this.isAnswered = true;
-        const isCorrect = entered === expected;
-        
-        // Disable input
-        this.missingInput.disabled = true;
-        
-        // Track incorrect answers for review
+        const values = this.missingInputs.map(inp => inp.value.trim().toLowerCase());
+        if (!force && values.some(v => !v)) return;
+
+        const allFilled = values.every(v => v.length === 1);
+        if (!allFilled) return;
+
+        const isCorrect = values.every((v, i) => v === this.expectedLetters[i]);
         if (!isCorrect) {
-            this.incorrectAnswers.push({
-                word: this.currentWord.correct,
-                selected: entered,
-                correct: expected
+            // Keep wrong letters — child must erase them; mark fields and allow retry
+            this.missingInputs.forEach((inp, i) => {
+                const ok = values[i] === this.expectedLetters[i];
+                inp.style.backgroundColor = ok ? '#d4edda' : '#f8d7da';
+                inp.style.borderColor = ok ? '#28a745' : '#dc3545';
+                inp.disabled = false;
             });
+            const wrongWord = this.buildWordFromGaps(values);
+            if (!this.incorrectAnswers.some(a => a.word === this.currentWord.correct)) {
+                this.incorrectAnswers.push({
+                    word: this.currentWord.correct,
+                    selected: wrongWord,
+                    correct: this.currentWord.correct
+                });
+                this.updateStats(false);
+            }
+            this.showFeedback(false);
+            const firstWrong = this.missingInputs.find((inp, i) => values[i] !== this.expectedLetters[i]);
+            if (firstWrong) firstWrong.focus();
+            return;
         }
-        
-        // Show result
-        this.missingInput.style.backgroundColor = isCorrect ? '#d4edda' : '#f8d7da';
-        this.missingInput.style.borderColor = isCorrect ? '#28a745' : '#dc3545';
-        
-        this.showFeedback(isCorrect);
-        this.updateStats(isCorrect);
+
+        this.isAnswered = true;
+        this.missingInputs.forEach(inp => {
+            inp.disabled = true;
+            inp.style.backgroundColor = '#d4edda';
+            inp.style.borderColor = '#28a745';
+        });
+        // If previously marked wrong but then fixed — keep in review list, count as correct now
+        this.showFeedback(true);
+        this.updateStats(true);
+    }
+
+    buildWordFromGaps(letters) {
+        const correct = this.currentWord.correct;
+        let out = '';
+        let gi = 0;
+        const posSet = new Set(this.missingPositions);
+        for (let i = 0; i < correct.length; i++) {
+            if (posSet.has(i)) {
+                out += letters[gi] || '_';
+                gi++;
+            } else {
+                out += correct[i];
+            }
+        }
+        return out;
     }
 
     checkAnswer(selectedOption) {
         if (this.isAnswered) return;
-        
-        this.isAnswered = true;
+
         const isCorrect = selectedOption === this.currentWord.correct;
-        
-        // Track incorrect answers for review
+
         if (!isCorrect) {
-            this.incorrectAnswers.push({
-                word: this.currentWord.correct,
-                selected: selectedOption,
-                correct: this.currentWord.correct
+            // Allow another try: mark only this option wrong, keep others clickable
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                if (btn.textContent === selectedOption) {
+                    btn.classList.add('incorrect');
+                    btn.disabled = true;
+                }
             });
+            if (!this.incorrectAnswers.some(a => a.word === this.currentWord.correct)) {
+                this.incorrectAnswers.push({
+                    word: this.currentWord.correct,
+                    selected: selectedOption,
+                    correct: this.currentWord.correct
+                });
+                this.updateStats(false);
+            }
+            this.showFeedback(false);
+            return;
         }
-        
-        // Update button styles
+
+        this.isAnswered = true;
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.disabled = true;
             if (btn.textContent === this.currentWord.correct) {
                 btn.classList.add('correct');
-            } else if (btn.textContent === selectedOption && !isCorrect) {
-                btn.classList.add('incorrect');
             }
         });
-
-        this.showFeedback(isCorrect);
-        this.updateStats(isCorrect);
+        this.showFeedback(true);
+        this.updateStats(true);
     }
 
     showFeedback(isCorrect) {
@@ -485,13 +729,23 @@ class SpellingGame {
         prevBtn.disabled = this.currentWordIndex === 0;
     }
 
+    stopSpeech() {
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        if (this.currentAudio) {
+            this.currentAudio.pause();
+            this.currentAudio = null;
+        }
+    }
+
     nextWord() {
+        this.stopSpeech();
         this.currentWordIndex++;
         this.loadWord();
     }
 
     prevWord() {
         if (this.currentWordIndex > 0) {
+            this.stopSpeech();
             this.currentWordIndex--;
             this.loadWord();
         }
@@ -510,14 +764,23 @@ class SpellingGame {
                     btn.classList.add('correct');
                 }
             });
-        } else {
-            // Show correct letter
-            if (this.missingInput) {
-                this.missingInput.value = this.expectedLetter;
-                this.missingInput.disabled = true;
-                this.missingInput.style.backgroundColor = '#d4edda';
-                this.missingInput.style.borderColor = '#28a745';
-            }
+        } else if (this.gameMode === 'dictate' && this.dictateInput) {
+            this.dictateInput.value = this.currentWord.correct;
+            this.dictateInput.disabled = true;
+            this.dictateInput.style.backgroundColor = '#d4edda';
+            this.dictateInput.style.borderColor = '#28a745';
+        } else if (this.missingInputs && this.missingInputs.length) {
+            this.missingInputs.forEach((inp, i) => {
+                inp.value = this.expectedLetters[i] || '';
+                inp.disabled = true;
+                inp.style.backgroundColor = '#d4edda';
+                inp.style.borderColor = '#28a745';
+            });
+        } else if (this.missingInput) {
+            this.missingInput.value = this.expectedLetter;
+            this.missingInput.disabled = true;
+            this.missingInput.style.backgroundColor = '#d4edda';
+            this.missingInput.style.borderColor = '#28a745';
         }
         
         const feedback = document.getElementById('feedback');
@@ -536,11 +799,8 @@ class SpellingGame {
                     <ul style="list-style: none; padding: 0;">
             `;
             
-            this.incorrectAnswers.forEach((item, index) => {
-                // Show full student answer, not just the letter
-                const fullAnswer = this.gameMode === 'missing' ? 
-                    this.reconstructFullAnswer(item.word, item.selected, item.correct) : 
-                    item.selected;
+            this.incorrectAnswers.forEach((item) => {
+                const fullAnswer = item.selected;
                 
                 incorrectAnswersHtml += `
                     <li style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px; border-left: 4px solid #e74c3c;">

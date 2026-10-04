@@ -1,0 +1,532 @@
+﻿[
+    {
+        "word":  "аккуратно",
+        "file":  "akkuratno.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "алфавит",
+        "file":  "alfavit.mp3",
+        "bytes":  9216
+    },
+    {
+        "word":  "альбом",
+        "file":  "albom.mp3",
+        "bytes":  7296
+    },
+    {
+        "word":  "апрель",
+        "file":  "aprel.mp3",
+        "bytes":  6912
+    },
+    {
+        "word":  "берёза",
+        "file":  "beryoza.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "быстро",
+        "file":  "bystro.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "вдруг",
+        "file":  "vdrug.mp3",
+        "bytes":  7488
+    },
+    {
+        "word":  "весело",
+        "file":  "veselo.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "ветер",
+        "file":  "veter.mp3",
+        "bytes":  7680
+    },
+    {
+        "word":  "вместе",
+        "file":  "vmeste.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "вокруг",
+        "file":  "vokrug.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "воробей",
+        "file":  "vorobey.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "ворона",
+        "file":  "vorona.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "восемь",
+        "file":  "vosem.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "воскресенье",
+        "file":  "voskresene.mp3",
+        "bytes":  10944
+    },
+    {
+        "word":  "восток",
+        "file":  "vostok.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "вторник",
+        "file":  "vtornik.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "гвоздика",
+        "file":  "gvozdika.mp3",
+        "bytes":  10176
+    },
+    {
+        "word":  "герой",
+        "file":  "geroy.mp3",
+        "bytes":  7296
+    },
+    {
+        "word":  "город",
+        "file":  "gorod.mp3",
+        "bytes":  7680
+    },
+    {
+        "word":  "горох",
+        "file":  "goroh.mp3",
+        "bytes":  8448
+    },
+    {
+        "word":  "девочка",
+        "file":  "devochka.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "дежурный",
+        "file":  "dezhurnyy.mp3",
+        "bytes":  9792
+    },
+    {
+        "word":  "декабрь",
+        "file":  "dekabr.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "деревня",
+        "file":  "derevnya.mp3",
+        "bytes":  9216
+    },
+    {
+        "word":  "до свидания",
+        "file":  "do-svidaniya.mp3",
+        "bytes":  10560
+    },
+    {
+        "word":  "дорога",
+        "file":  "doroga.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "завод",
+        "file":  "zavod.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "заяц",
+        "file":  "zayats.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "здравствуй",
+        "file":  "zdravstvuy.mp3",
+        "bytes":  10560
+    },
+    {
+        "word":  "земляника",
+        "file":  "zemlyanika.mp3",
+        "bytes":  10176
+    },
+    {
+        "word":  "извините",
+        "file":  "izvinite.mp3",
+        "bytes":  9792
+    },
+    {
+        "word":  "иней",
+        "file":  "iney.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "капуста",
+        "file":  "kapusta.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "карандаш",
+        "file":  "karandash.mp3",
+        "bytes":  10176
+    },
+    {
+        "word":  "картина",
+        "file":  "kartina.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "класс",
+        "file":  "klass.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "коньки",
+        "file":  "konki.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "корова",
+        "file":  "korova.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "лопата",
+        "file":  "lopata.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "лягушка",
+        "file":  "lyagushka.mp3",
+        "bytes":  9216
+    },
+    {
+        "word":  "магазин",
+        "file":  "magazin.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "малина",
+        "file":  "malina.mp3",
+        "bytes":  8448
+    },
+    {
+        "word":  "машина",
+        "file":  "mashina.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "мебель",
+        "file":  "mebel.mp3",
+        "bytes":  7488
+    },
+    {
+        "word":  "медведь",
+        "file":  "medved.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "месяц",
+        "file":  "mesyats.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "метель",
+        "file":  "metel.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "метро",
+        "file":  "metro.mp3",
+        "bytes":  7296
+    },
+    {
+        "word":  "молоко",
+        "file":  "moloko.mp3",
+        "bytes":  8448
+    },
+    {
+        "word":  "молоток",
+        "file":  "molotok.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "морковь",
+        "file":  "morkov.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "мороз",
+        "file":  "moroz.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "Москва",
+        "file":  "moskva.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "народ",
+        "file":  "narod.mp3",
+        "bytes":  7680
+    },
+    {
+        "word":  "ноябрь",
+        "file":  "noyabr.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "обед",
+        "file":  "obed.mp3",
+        "bytes":  7296
+    },
+    {
+        "word":  "обезьяна",
+        "file":  "obezyana.mp3",
+        "bytes":  9792
+    },
+    {
+        "word":  "облако",
+        "file":  "oblako.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "одежда",
+        "file":  "odezhda.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "октябрь",
+        "file":  "oktyabr.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "осина",
+        "file":  "osina.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "отец",
+        "file":  "otets.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "пальто",
+        "file":  "palto.mp3",
+        "bytes":  7680
+    },
+    {
+        "word":  "пенал",
+        "file":  "penal.mp3",
+        "bytes":  7104
+    },
+    {
+        "word":  "петух",
+        "file":  "petuh.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "платок",
+        "file":  "platok.mp3",
+        "bytes":  8448
+    },
+    {
+        "word":  "посуда",
+        "file":  "posuda.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "прощай",
+        "file":  "proschay.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "работа",
+        "file":  "rabota.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "рабочий",
+        "file":  "rabochiy.mp3",
+        "bytes":  9600
+    },
+    {
+        "word":  "ребята",
+        "file":  "rebyata.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "рисунок",
+        "file":  "risunok.mp3",
+        "bytes":  9600
+    },
+    {
+        "word":  "Родина",
+        "file":  "rodina.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "родина",
+        "file":  "rodina.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "Россия",
+        "file":  "rossiya.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "русский",
+        "file":  "russkiy.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "сапоги",
+        "file":  "sapogi.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "сахар",
+        "file":  "sahar.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "сентябрь",
+        "file":  "sentyabr.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "скоро",
+        "file":  "skoro.mp3",
+        "bytes":  8064
+    },
+    {
+        "word":  "снегирь",
+        "file":  "snegir.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "собака",
+        "file":  "sobaka.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "сорока",
+        "file":  "soroka.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "спасибо",
+        "file":  "spasibo.mp3",
+        "bytes":  9792
+    },
+    {
+        "word":  "стакан",
+        "file":  "stakan.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "суббота",
+        "file":  "subbota.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "тарелка",
+        "file":  "tarelka.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "тетрадь",
+        "file":  "tetrad.mp3",
+        "bytes":  8640
+    },
+    {
+        "word":  "товарищ",
+        "file":  "tovarisch.mp3",
+        "bytes":  9600
+    },
+    {
+        "word":  "топор",
+        "file":  "topor.mp3",
+        "bytes":  7104
+    },
+    {
+        "word":  "улица",
+        "file":  "ulitsa.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "урожай",
+        "file":  "urozhay.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "ученик",
+        "file":  "uchenik.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "ученица",
+        "file":  "uchenitsa.mp3",
+        "bytes":  10176
+    },
+    {
+        "word":  "учитель",
+        "file":  "uchitel.mp3",
+        "bytes":  8448
+    },
+    {
+        "word":  "учительница",
+        "file":  "uchitelnitsa.mp3",
+        "bytes":  11520
+    },
+    {
+        "word":  "фамилия",
+        "file":  "familiya.mp3",
+        "bytes":  9024
+    },
+    {
+        "word":  "февраль",
+        "file":  "fevral.mp3",
+        "bytes":  7488
+    },
+    {
+        "word":  "хорошо",
+        "file":  "horosho.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "щавель",
+        "file":  "schavel.mp3",
+        "bytes":  7872
+    },
+    {
+        "word":  "яблоко",
+        "file":  "yabloko.mp3",
+        "bytes":  9408
+    },
+    {
+        "word":  "яблоня",
+        "file":  "yablonya.mp3",
+        "bytes":  9216
+    },
+    {
+        "word":  "ягода",
+        "file":  "yagoda.mp3",
+        "bytes":  8832
+    },
+    {
+        "word":  "язык",
+        "file":  "yazyk.mp3",
+        "bytes":  8256
+    },
+    {
+        "word":  "январь",
+        "file":  "yanvar.mp3",
+        "bytes":  7296
+    }
+]

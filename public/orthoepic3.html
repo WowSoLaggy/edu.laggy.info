@@ -3,23 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Орфограммы - Практика правописания</title>
+    <title>3 класс - Орфоэпический словарь</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.png">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📝 Орфограммы</h1>
-            <p>Поможем выучить правильное написание русских слов!</p>
-            <a href="russian.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к выбору</a>
+            <h1>🎯 Орфоэпический словарь</h1>
+            <p>Выбери верный вариант или поставь ударение!</p>
+            <a href="russian3.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к выбору</a>
         </header>
+
 
         <div class="game-area">
             <div class="top-controls" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
                 <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-                    <button id="mode-choice" class="mode-btn active-mode">Выбери правильное написание</button>
-                    <button id="mode-missing" class="mode-btn">Впиши недостающую букву</button>
-                    <button id="mode-dictate" class="mode-btn">Напиши на слух</button>
+                    <button id="mode-mc" class="mode-btn active-mode">Выбрать верный вариант</button>
+                    <button id="mode-place" class="mode-btn">Поставить ударение</button>
                 </div>
                 <div style="display:flex; gap:8px; align-items:center;">
                     <span>Тренировка:</span>
@@ -27,10 +28,7 @@
                     <label><input type="radio" name="train-size" id="train-15"> 15 случайных</label>
                 </div>
             </div>
-
-            <div class="word-display" id="word-display" style="display:none;">
-                <!-- Word display hidden to avoid showing correct spelling -->
-            </div>
+            
 
             <!-- Multiple Choice Mode -->
             <div class="game-mode" id="multiple-choice-mode">
@@ -39,18 +37,10 @@
                 </div>
             </div>
 
-            <!-- Missing Letter Mode -->
-            <div class="game-mode" id="missing-letter-mode" style="display:none;">
-                <div id="missing-letter-container">
-                    <!-- Missing letter content will be generated here -->
-                </div>
-            </div>
-
-            <!-- Dictate Mode -->
-            <div class="game-mode" id="dictate-mode" style="display:none;">
-                <div id="dictate-container" style="text-align:center;">
-                    <!-- Filled by JS -->
-                </div>
+            <!-- Place Stress Mode -->
+            <div class="game-mode" id="place-stress-mode" style="display:none;">
+                <div id="place-stress-container" style="text-align:center; margin-bottom:15px;"></div>
+                <div style="text-align:center; color:#666;">Нажми на гласную букву, чтобы поставить ударение.</div>
             </div>
 
             <div class="feedback" id="feedback"></div>
@@ -84,6 +74,7 @@
         </div>
     </div>
 
-    <script src="spelling.js"></script>
+    <script src="words-grade3.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

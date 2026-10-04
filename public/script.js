@@ -1,5 +1,6 @@
 // Word list from the orthoepic dictionary - only words with clear stress indicators
-const wordList = [
+// Override with window.ORTHOEPIC_WORD_LIST before loading this script (e.g. 3 класс)
+const defaultWordList = [
     { word: "алфавит", stressed: "алфави́т" },
     { word: "арбуз", stressed: "арбу́з" },
     { word: "баловаться", stressed: "балова́ться" },
@@ -86,6 +87,10 @@ const wordList = [
     { word: "шарфы", stressed: "ша́рфы" },
     { word: "шофёры", stressed: "шофё́ры" }
 ];
+
+const wordList = (typeof window !== 'undefined' && Array.isArray(window.ORTHOEPIC_WORD_LIST) && window.ORTHOEPIC_WORD_LIST.length)
+    ? window.ORTHOEPIC_WORD_LIST
+    : defaultWordList;
 
 class WordStressGame {
     constructor() {
@@ -570,7 +575,8 @@ class WordStressGame {
             mcBtn.classList.toggle('active-mode', mode === 'mc');
             placeBtn.classList.toggle('active-mode', mode === 'place');
         }
-        this.loadWord();
+        // After "игра завершена" index is past the end — restart so mode can switch
+        this.resetGameWithNewList();
     }
 
     updateModeUI() {
@@ -589,11 +595,21 @@ class WordStressGame {
         this.resetGameWithNewList();
     }
 
+    showNavButtons() {
+        const prev = document.getElementById('prev-word');
+        const next = document.getElementById('next-word');
+        const show = document.getElementById('show-answer');
+        if (prev) prev.style.display = 'inline-block';
+        if (next) next.style.display = 'inline-block';
+        if (show) show.style.display = 'inline-block';
+    }
+
     resetGameWithNewList() {
         this.currentWordIndex = 0;
         this.correctCount = 0;
         this.incorrectCount = 0;
         this.incorrectAnswers = [];
+        this.showNavButtons();
         this.buildActiveList();
         this.shuffleWords();
         this.loadWord();
