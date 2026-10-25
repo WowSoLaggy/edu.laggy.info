@@ -300,6 +300,40 @@ header p {
     color: #8B0000;
 }
 
+.site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 6px 8px;
+    padding: 10px 16px;
+    background: #fff5f5;
+    border-bottom: 2px solid #8B0000;
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.site-nav a {
+    color: #8B0000;
+    text-decoration: none;
+}
+
+.site-nav a:hover {
+    text-decoration: underline;
+}
+
+.site-nav .site-nav-here {
+    color: #8B0000;
+}
+
+.site-nav .site-nav-sep {
+    color: #c47a7a;
+    font-weight: normal;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .container {

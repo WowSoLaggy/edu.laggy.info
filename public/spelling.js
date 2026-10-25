@@ -431,13 +431,31 @@ class SpellingGame {
         input.focus();
     }
 
+    dictateMatches(raw) {
+        const entered = String(raw || '').trim().replace(/\s+/g, ' ');
+        const expected = String(this.currentWord.correct || '').trim().replace(/\s+/g, ' ');
+        if (!entered) return false;
+        if (!this.currentWord.exactCase) {
+            return entered.toLowerCase() === expected.toLowerCase();
+        }
+        // Кремль: всё слово, включая заглавную К
+        if (expected === 'Кремль') return entered === expected;
+        // Красная площадь: регистр обязателен только у К и п
+        if (entered.toLowerCase() !== expected.toLowerCase()) return false;
+        for (let i = 0; i < expected.length; i++) {
+            if ((expected[i] === 'К' || expected[i] === 'п') && entered[i] !== expected[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     checkDictateAnswer() {
         if (this.isAnswered || !this.dictateInput) return;
-        const entered = this.normalizeSpelling(this.dictateInput.value);
-        if (!entered) return;
+        const raw = this.dictateInput.value;
+        if (!String(raw || '').trim()) return;
 
-        const expected = this.normalizeSpelling(this.currentWord.correct);
-        const isCorrect = entered === expected;
+        const isCorrect = this.dictateMatches(raw);
 
         if (!isCorrect) {
             this.dictateInput.style.backgroundColor = '#f8d7da';
@@ -558,7 +576,8 @@ class SpellingGame {
 
         this.missingInputs = [];
         this.missingPositions = positions;
-        this.expectedLetters = positions.map(i => correct[i].toLowerCase());
+        this.exactCase = !!this.currentWord.exactCase;
+        this.expectedLetters = positions.map(i => this.exactCase ? correct[i] : correct[i].toLowerCase());
         // keep legacy single-input refs for older helpers
         this.missingInput = null;
         this.expectedLetter = this.expectedLetters[0] || '';
@@ -603,7 +622,8 @@ class SpellingGame {
 
     tryCheckMissingLetters(force = false) {
         if (this.isAnswered) return;
-        const values = this.missingInputs.map(inp => inp.value.trim().toLowerCase());
+        const typed = this.missingInputs.map(inp => inp.value.trim());
+        const values = this.exactCase ? typed : typed.map(v => v.toLowerCase());
         if (!force && values.some(v => !v)) return;
 
         const allFilled = values.every(v => v.length === 1);

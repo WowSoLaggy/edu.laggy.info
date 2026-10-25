@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 класс - Орфограммы</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="nav.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Орфограммы</h1>
+            <p id="set-label">1 столбик</p>
+            <p>Поможем выучить правильное написание русских слов!</p>
+            <a href="spelling3.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к столбикам</a>
+        </header>
+
+        <div class="game-area">
+            <div class="top-controls" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <button id="mode-choice" class="mode-btn active-mode">Выбери правильное написание</button>
+                    <button id="mode-missing" class="mode-btn">Впиши недостающую букву</button>
+                    <button id="mode-dictate" class="mode-btn">Напиши на слух</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <span>Тренировка:</span>
+                    <label><input type="radio" name="train-size" id="train-all" checked> все слова</label>
+                    <label><input type="radio" name="train-size" id="train-15"> 15 случайных</label>
+                </div>
+            </div>
+
+            <div class="word-display" id="word-display" style="display:none;">
+                <!-- Word display hidden to avoid showing correct spelling -->
+            </div>
+
+            <div class="game-mode" id="multiple-choice-mode">
+                <div class="options-container" id="options-container">
+                </div>
+            </div>
+
+            <div class="game-mode" id="missing-letter-mode" style="display:none;">
+                <div id="missing-letter-container">
+                </div>
+            </div>
+
+            <div class="game-mode" id="dictate-mode" style="display:none;">
+                <div id="dictate-container" style="text-align:center;">
+                </div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+                <button id="prev-word" class="prev-btn">Предыдущее слово</button>
+                <button id="next-word" class="next-btn">Следующее слово</button>
+                <button id="show-answer" class="action-btn">Показать ответ</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Правильно:</span>
+                <span class="stat-value" id="correct-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Неправильно:</span>
+                <span class="stat-value" id="incorrect-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Всего слов:</span>
+                <span class="stat-value" id="total-count">0</span>
+            </div>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">0/0</span>
+        </div>
+    </div>
+
+    <script src="spelling-words-grade3.js?v=4"></script>
+    <script>
+        (function () {
+            var title = window.SPELLING_SET_TITLE || '1 столбик';
+            var label = document.getElementById('set-label');
+            if (label) label.textContent = title;
+            document.title = '3 класс — ' + title;
+        })();
+    </script>
+    <script src="spelling.js?v=5"></script>
+</body>
+</html>

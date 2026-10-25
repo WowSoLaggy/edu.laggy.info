@@ -5,86 +5,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3 класс - Орфограммы</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="nav.js" defer></script>
+    <style>
+        .main-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 40px;
+            text-align: center;
+        }
+        .main-title {
+            font-size: 2.4em;
+            color: #8B0000;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .option-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+        }
+        .option-btn {
+            background: linear-gradient(45deg, #8B0000, #DC143C);
+            color: white;
+            border: 3px solid #8B0000;
+            padding: 25px 40px;
+            border-radius: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            min-width: 300px;
+        }
+        .option-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.4);
+            background: linear-gradient(45deg, #DC143C, #8B0000);
+        }
+        .school-logo { font-size: 2em; margin-bottom: 20px; }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #8B0000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📝 Орфограммы</h1>
-            <p>Поможем выучить правильное написание русских слов!</p>
-            <a href="russian3.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к выбору</a>
-        </header>
-
-        <div class="game-area">
-            <div class="top-controls" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
-                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
-                    <button id="mode-choice" class="mode-btn active-mode">Выбери правильное написание</button>
-                    <button id="mode-missing" class="mode-btn">Впиши недостающую букву</button>
-                    <button id="mode-dictate" class="mode-btn">Напиши на слух</button>
-                </div>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <span>Тренировка:</span>
-                    <label><input type="radio" name="train-size" id="train-all" checked> все слова</label>
-                    <label><input type="radio" name="train-size" id="train-15"> 15 случайных</label>
-                </div>
-            </div>
-
-            <div class="word-display" id="word-display" style="display:none;">
-                <!-- Word display hidden to avoid showing correct spelling -->
-            </div>
-
-            <!-- Multiple Choice Mode -->
-            <div class="game-mode" id="multiple-choice-mode">
-                <div class="options-container" id="options-container">
-                    <!-- Options will be generated here -->
-                </div>
-            </div>
-
-            <!-- Missing Letter Mode -->
-            <div class="game-mode" id="missing-letter-mode" style="display:none;">
-                <div id="missing-letter-container">
-                    <!-- Missing letter content will be generated here -->
-                </div>
-            </div>
-
-            <!-- Dictate Mode -->
-            <div class="game-mode" id="dictate-mode" style="display:none;">
-                <div id="dictate-container" style="text-align:center;">
-                    <!-- Filled by JS -->
-                </div>
-            </div>
-
-            <div class="feedback" id="feedback"></div>
-            <div class="controls">
-                <button id="prev-word" class="prev-btn">Предыдущее слово</button>
-                <button id="next-word" class="next-btn">Следующее слово</button>
-                <button id="show-answer" class="action-btn">Показать ответ</button>
-            </div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-label">Правильно:</span>
-                <span class="stat-value" id="correct-count">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Неправильно:</span>
-                <span class="stat-value" id="incorrect-count">0</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-label">Всего слов:</span>
-                <span class="stat-value" id="total-count">0</span>
-            </div>
-        </div>
-
-        <div class="progress">
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill"></div>
-            </div>
-            <span class="progress-text" id="progress-text">0/0</span>
+    <div class="main-container">
+        <a href="russian3.html" class="back-link">← Назад к русскому языку</a>
+        <div class="school-logo">📝</div>
+        <h1 class="main-title">Орфограммы</h1>
+        <div class="option-buttons">
+            <a href="spelling3-quiz.html?set=1" class="option-btn">1 столбик</a>
+            <a href="spelling3-quiz.html?set=2" class="option-btn">2 столбик</a>
         </div>
     </div>
-
-    <script src="spelling-words-grade3.js"></script>
-    <script src="spelling.js"></script>
 </body>
 </html>
