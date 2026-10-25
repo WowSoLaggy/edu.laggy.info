@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3 класс - Орфоэпический словарь</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Орфоэпический словарь</h1>
+            <p id="set-label">1 столбик</p>
+            <p>Выбери верный вариант или поставь ударение!</p>
+            <a href="orthoepic3.html" style="color: #8B0000; text-decoration: none; font-weight: bold;">← Назад к столбикам</a>
+        </header>
+
+
+        <div class="game-area">
+            <div class="top-controls" style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom:15px;">
+                <div style="display:flex; gap:8px; flex-wrap:wrap; justify-content:center;">
+                    <button id="mode-mc" class="mode-btn active-mode">Выбрать верный вариант</button>
+                    <button id="mode-place" class="mode-btn">Поставить ударение</button>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <span>Тренировка:</span>
+                    <label><input type="radio" name="train-size" id="train-all" checked> все слова</label>
+                    <label><input type="radio" name="train-size" id="train-15"> 15 случайных</label>
+                </div>
+            </div>
+            
+
+            <!-- Multiple Choice Mode -->
+            <div class="game-mode" id="multiple-choice-mode">
+                <div class="options-container" id="options-container">
+                    <!-- Options will be generated here -->
+                </div>
+            </div>
+
+            <!-- Place Stress Mode -->
+            <div class="game-mode" id="place-stress-mode" style="display:none;">
+                <div id="place-stress-container" style="text-align:center; margin-bottom:15px;"></div>
+                <div style="text-align:center; color:#666;">Нажми на гласную букву, чтобы поставить ударение.</div>
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+            <div class="controls">
+                <button id="prev-word" class="prev-btn">Предыдущее слово</button>
+                <button id="next-word" class="next-btn">Следующее слово</button>
+                <button id="show-answer" class="action-btn">Показать ответ</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Правильно:</span>
+                <span class="stat-value" id="correct-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Неправильно:</span>
+                <span class="stat-value" id="incorrect-count">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Всего слов:</span>
+                <span class="stat-value" id="total-count">0</span>
+            </div>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <span class="progress-text" id="progress-text">0/0</span>
+        </div>
+    </div>
+
+    <script src="words-grade3.js"></script>
+    <script>
+        (function () {
+            var title = window.ORTHOEPIC_SET_TITLE || '1 столбик';
+            var label = document.getElementById('set-label');
+            if (label) label.textContent = title;
+            document.title = '3 класс — ' + title;
+        })();
+    </script>
+    <script src="script.js?v=11"></script>
+</body>
+</html>

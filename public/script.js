@@ -229,6 +229,22 @@ class WordStressGame {
         const wrongOptions = [];
         const currentWord = this.currentWord.word;
         const stressedWord = this.currentWord.stressed;
+
+        // яичница has four vowels. Always show every stress position,
+        // including the last one: яичница́.
+        if (currentWord === 'яичница') {
+            const correctAnswers = this.getCorrectAnswersForWord(currentWord);
+            let vowelIndex = 0;
+            for (let i = 0; i < currentWord.length; i++) {
+                if (!this.isVowel(currentWord[i])) continue;
+                const variant = this.addStressToVowel(currentWord, vowelIndex);
+                vowelIndex++;
+                if (!correctAnswers.includes(variant) && variant.includes('́') && !wrongOptions.includes(variant)) {
+                    wrongOptions.push(variant);
+                }
+            }
+            return wrongOptions;
+        }
         
         // Randomly choose number of options (2-4 wrong options + 1 correct = 3-5 total)
         const numWrongOptions = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4 wrong options
